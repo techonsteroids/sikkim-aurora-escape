@@ -16,7 +16,7 @@ export function Cursor() {
     const onMove = (e: PointerEvent) => {
       setPos({ x: e.clientX, y: e.clientY });
       const target = (e.target as HTMLElement | null)?.closest<HTMLElement>("[data-cursor]");
-      setLabel(target?.dataset.cursor ?? "");
+      setLabel(target?.dataset["cursor"] ?? "");
     };
     window.addEventListener("pointermove", onMove);
     return () => window.removeEventListener("pointermove", onMove);
