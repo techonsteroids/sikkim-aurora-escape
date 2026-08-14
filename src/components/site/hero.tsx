@@ -51,7 +51,7 @@ export function Hero() {
           Pelling · Sikkim
         </motion.p>
 
-        <h1 className="mt-5 max-w-[16ch]">
+        <h1 className="mt-5">
           {words.map((word, i) => (
             <span key={word} className="block overflow-hidden">
               <motion.span

@@ -30,7 +30,7 @@ export function Rooms() {
       >
         {rooms.map((room) => (
           <motion.li key={room.name} variants={staggerItem} className="group flex flex-col">
-            <div className="overflow-hidden">
+            <div className="overflow-hidden" data-cursor="View">
               <img
                 src={room.image}
                 alt={room.alt}
