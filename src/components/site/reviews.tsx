@@ -45,7 +45,7 @@ export function Reviews() {
 
       <Reveal delay={0.1}>
         <a
-          href={ratings[0].url}
+          href={ratings[0]?.url ?? "#reviews"}
           target="_blank"
           rel="noopener noreferrer"
           className="mt-12 inline-flex items-center gap-2 eyebrow rule-hover"
