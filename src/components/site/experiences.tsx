@@ -24,7 +24,7 @@ export function Experiences() {
       >
         {experiences.map((item) => (
           <motion.li key={item.name} variants={staggerItem} className="group">
-            <div className="overflow-hidden">
+            <div className="overflow-hidden" data-cursor="Explore">
               <img
                 src={item.image}
                 alt={item.alt}
