@@ -1,31 +1,30 @@
 import { useEffect, useRef } from "react";
-import { useReducedMotion } from "framer-motion";
 import { diningGallery } from "@/data/hotel";
 import { Reveal } from "./reveal";
 
 export function Dining() {
   const galleryRef = useRef<HTMLUListElement>(null);
-  const reducedMotion = useReducedMotion();
 
   useEffect(() => {
-    if (reducedMotion) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    let frame = 0;
-    let previousTime: number | null = null;
+    let previousTime = performance.now();
     let direction = 1;
 
-    const animate = (time: number) => {
+    const timer = window.setInterval(() => {
+      const time = performance.now();
       const gallery = galleryRef.current;
+      const elapsed = time - previousTime;
+      previousTime = time;
 
       if (
         gallery &&
-        previousTime !== null &&
         !gallery.matches(":hover") &&
         !gallery.contains(document.activeElement)
       ) {
         const maxScroll = gallery.scrollWidth - gallery.clientWidth;
         if (maxScroll > 0) {
-          const step = ((time - previousTime) / 1000) * 22;
+          const step = (elapsed / 1000) * 22;
           const nextScroll = gallery.scrollLeft + direction * step;
 
           if (nextScroll >= maxScroll) {
@@ -39,14 +38,10 @@ export function Dining() {
           }
         }
       }
+    }, 30);
 
-      previousTime = time;
-      frame = requestAnimationFrame(animate);
-    };
-
-    frame = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(frame);
-  }, [reducedMotion]);
+    return () => window.clearInterval(timer);
+  }, []);
 
   return (
     <section id="dining" className="border-y border-border bg-secondary py-24 sm:py-32">
