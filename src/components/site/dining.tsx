@@ -1,7 +1,53 @@
+import { useEffect, useRef } from "react";
+import { useReducedMotion } from "framer-motion";
 import { diningGallery } from "@/data/hotel";
 import { Reveal } from "./reveal";
 
 export function Dining() {
+  const galleryRef = useRef<HTMLUListElement>(null);
+  const reducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    if (reducedMotion) return;
+
+    let frame = 0;
+    let previousTime: number | null = null;
+    let direction = 1;
+
+    const animate = (time: number) => {
+      const gallery = galleryRef.current;
+
+      if (
+        gallery &&
+        previousTime !== null &&
+        !gallery.matches(":hover") &&
+        !gallery.contains(document.activeElement)
+      ) {
+        const maxScroll = gallery.scrollWidth - gallery.clientWidth;
+        if (maxScroll > 0) {
+          const step = ((time - previousTime) / 1000) * 22;
+          const nextScroll = gallery.scrollLeft + direction * step;
+
+          if (nextScroll >= maxScroll) {
+            gallery.scrollLeft = maxScroll;
+            direction = -1;
+          } else if (nextScroll <= 0) {
+            gallery.scrollLeft = 0;
+            direction = 1;
+          } else {
+            gallery.scrollLeft = nextScroll;
+          }
+        }
+      }
+
+      previousTime = time;
+      frame = requestAnimationFrame(animate);
+    };
+
+    frame = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(frame);
+  }, [reducedMotion]);
+
   return (
     <section id="dining" className="border-y border-border bg-secondary py-24 sm:py-32">
       <div className="mx-auto max-w-[1500px] px-5 sm:px-8">
@@ -17,7 +63,8 @@ export function Dining() {
 
       <Reveal delay={0.1}>
         <ul
-          className="mt-14 flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-4 sm:px-8 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          ref={galleryRef}
+          className="mt-14 flex snap-none gap-5 overflow-x-auto px-5 pb-4 sm:px-8 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           aria-label="Dining gallery"
         >
           {diningGallery.map((item) => (
